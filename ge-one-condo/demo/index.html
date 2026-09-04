@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>G|E ONE Condo — Demo 0.1</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">G|E <span>ONE</span><small>CONDO</small></div>
+    <nav>
+      <button class="nav active" data-view="portaria">Portaria</button>
+      <button class="nav" data-view="sindico">Síndico</button>
+      <button class="nav" data-view="admin">Administradora</button>
+      <button class="nav" data-view="trust">G|E Trust</button>
+      <button class="nav" data-view="discovery">Discovery</button>
+    </nav>
+    <div class="status"><span></span> Ambiente demonstrativo</div>
+  </aside>
+
+  <main>
+    <header>
+      <div><h1 id="view-title">Portaria</h1><p id="view-subtitle">Receba uma encomenda em poucos passos.</p></div>
+      <div class="condo">Residencial Horizonte <b>Campinas/SP</b></div>
+    </header>
+
+    <section id="portaria" class="view active">
+      <div class="hero-card">
+        <div><span class="eyebrow">G|E BOX</span><h2>Receber encomenda</h2><p>Leia a etiqueta, confirme o morador e deixe o sistema cuidar do restante.</p></div>
+        <button class="primary" id="start-receive">+ Nova encomenda</button>
+      </div>
+      <div class="grid stats">
+        <article><span>Hoje</span><strong id="received-today">37</strong><small>recebidas</small></article>
+        <article><span>Aguardando</span><strong>8</strong><small>retirada</small></article>
+        <article><span>Operação normal</span><strong>98,4%</strong><small>sem intervenção</small></article>
+        <article><span>BOX</span><strong>64%</strong><small>ocupação</small></article>
+      </div>
+      <div class="grid two">
+        <article class="panel"><h3>Fila inteligente</h3><div id="queue"></div></article>
+        <article class="panel"><h3>Exceções</h3><div class="alert yellow"><b>3 volumes acima de 24h</b><span>Autopilot já notificou os moradores.</span></div><div class="alert red"><b>Locker M07 indisponível</b><span>Bloqueado preventivamente para conferência.</span></div></article>
+      </div>
+    </section>
+
+    <section id="sindico" class="view">
+      <div class="hero-card compact"><div><span class="eyebrow">GESTÃO POR EXCEÇÃO</span><h2>98,4% da operação está normal</h2><p>Você vê primeiro aquilo que realmente precisa de decisão.</p></div><div class="health">Saúde operacional <b>Excelente</b></div></div>
+      <div class="grid stats"><article><span>Mês</span><strong>1.847</strong><small>encomendas</small></article><article><span>>24h</span><strong>4,8%</strong><small>pendências</small></article><article><span>Tempo médio</span><strong>7h18</strong><small>até retirada</small></article><article><span>Notificações</span><strong>99,2%</strong><small>entregues</small></article></div>
+      <div class="grid two"><article class="panel"><h3>O que precisa de atenção</h3><div class="task"><b>6 encomendas antigas</b><span>Prioridade alta · verificar hoje</span><button>Resolver</button></div><div class="task"><b>1 equipamento em atenção</b><span>Locker M07 · manutenção sugerida</span><button>Ver</button></div></article><article class="panel"><h3>G|E AI</h3><p class="ai">“O maior pico desta semana ocorreu terça-feira entre 17h e 20h. Mantido o padrão atual, a ocupação poderá chegar a 86% amanhã no mesmo período.”</p><button class="secondary">Ver recomendação</button></article></div>
+    </section>
+
+    <section id="admin" class="view">
+      <div class="hero-card compact"><div><span class="eyebrow">ONE ADMIN</span><h2>Uma carteira. Uma visão.</h2><p>Administradoras acompanham todos os condomínios sem entrar em sistemas separados.</p></div></div>
+      <div class="grid stats"><article><span>Condomínios</span><strong>42</strong><small>na carteira</small></article><article><span>Normais</span><strong>37</strong><small>sem ação</small></article><article><span>Atenção</span><strong>4</strong><small>acompanhar</small></article><article><span>Crítico</span><strong>1</strong><small>agir agora</small></article></div>
+      <article class="panel"><h3>Prioridades da carteira</h3><table><thead><tr><th>Condomínio</th><th>Status</th><th>Motivo</th><th>Ação</th></tr></thead><tbody><tr><td>Residencial Horizonte</td><td><span class="pill yellow">Atenção</span></td><td>Ocupação prevista 86%</td><td>Dimensionar</td></tr><tr><td>Parque das Flores</td><td><span class="pill red">Crítico</span></td><td>Equipamento offline</td><td>Acionar suporte</td></tr><tr><td>Vista Verde</td><td><span class="pill green">Normal</span></td><td>Sem pendências</td><td>—</td></tr></tbody></table></article>
+    </section>
+
+    <section id="trust" class="view">
+      <div class="hero-card compact"><div><span class="eyebrow">G|E TRUST</span><h2>Cadeia de custódia digital</h2><p>Uma consulta simples para entender o ciclo completo da encomenda.</p></div></div>
+      <article class="panel timeline"><div><b>14:32</b><span>Encomenda recebida</span><small>Portaria · Operador Ana</small></div><div><b>14:32</b><span>Etiqueta identificada</span><small>Torre B · Apto 83</small></div><div><b>14:33</b><span>Armazenada</span><small>Locker M08</small></div><div><b>14:33</b><span>Morador notificado</span><small>Canal: WhatsApp</small></div><div><b>19:48</b><span>Retirada autenticada</span><small>PIN temporário</small></div><div><b>19:48</b><span>Operação encerrada</span><small>Registro concluído</small></div></article>
+    </section>
+
+    <section id="discovery" class="view">
+      <div class="hero-card compact"><div><span class="eyebrow">G|E BOX DISCOVERY</span><h2>Medir antes de vender hardware</h2><p>Dimensionamento baseado no comportamento real do condomínio.</p></div></div>
+      <div class="grid stats"><article><span>30 dias</span><strong>1.483</strong><small>encomendas</small></article><article><span>Pico</span><strong>37</strong><small>volumes simultâneos</small></article><article><span>Permanência</span><strong>8h42</strong><small>média</small></article><article><span>>24h</span><strong>8,4%</strong><small>dos volumes</small></article></div>
+      <div class="grid two"><article class="panel"><h3>Perfil dos volumes</h3><div class="bars"><label>P <i style="width:41%"></i><b>41%</b></label><label>M <i style="width:37%"></i><b>37%</b></label><label>G <i style="width:17%"></i><b>17%</b></label><label>XG <i style="width:5%"></i><b>5%</b></label></div></article><article class="panel"><h3>Recomendação</h3><p>Priorizar compartimentos P/M e manter área BOX Anywhere para volumes XG. Reavaliar capacidade após 60 dias de operação.</p><button class="primary">Gerar proposta</button></article></div>
+    </section>
+  </main>
+
+  <dialog id="receive-modal">
+    <form method="dialog">
+      <div class="modal-head"><div><span class="eyebrow">RECEBIMENTO ASSISTIDO</span><h2>Nova encomenda</h2></div><button class="close">×</button></div>
+      <div class="scan">📷<b>Etiqueta lida</b><span>Nome: Glauston Lima · Torre B · Apto 83</span></div>
+      <label>Tamanho estimado<select id="size"><option>P</option><option selected>M</option><option>G</option><option>XG</option></select></label>
+      <label>Local sugerido<input id="locker" value="Locker M08" readonly></label>
+      <label class="checkbox"><input type="checkbox" id="outside"> Volume fora do locker (BOX Anywhere)</label>
+      <div class="modal-actions"><button value="cancel" class="secondary">Cancelar</button><button value="default" id="confirm-receive" class="primary">Confirmar recebimento</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
