@@ -1,0 +1,33 @@
+name: Deploy G|E Aliança Lima App to Pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/ge-alianca-lima-app/**'
+      - '.github/workflows/ge-alianca-lima-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: ge-alianca-lima-pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload app
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: projects/ge-alianca-lima-app
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
