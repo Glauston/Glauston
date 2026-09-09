@@ -1,0 +1,12 @@
+{
+  "name": "G|E Aliança Lima Transportes — Controle",
+  "short_name": "G|E Controle",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0b1f33",
+  "icons": [
+    {"src":"./favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
