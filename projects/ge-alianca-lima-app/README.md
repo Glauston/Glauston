@@ -29,3 +29,4 @@ Para uso simultâneo por mais de um aparelho, conectar a uma base online com aut
 
 ## Publicação
 Conteúdo estático e pronto para Vercel, Netlify ou GitHub Pages.
+Workflow de deploy automático incluído em `.github/workflows/ge-alianca-lima-pages.yml`.
