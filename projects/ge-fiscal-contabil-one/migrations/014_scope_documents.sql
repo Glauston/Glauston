@@ -1,0 +1,1 @@
+ALTER TABLE fiscal_documents ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL
