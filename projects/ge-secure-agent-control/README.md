@@ -36,7 +36,23 @@ Usuário/Evento → Agent Registry → Identity → Policy Engine → Risk Engin
 11. Kill Switch — interrupção imediata e revogação de sessões.
 12. Simulation / Dry Run — avaliar políticas e impacto sem executar ação real.
 
-## Integrações G|E
+## Plataforma universal e agnóstica
+O G|E Secure Agent Control não é limitado ao ecossistema G|E. Ele é uma camada independente de controle para agentes, automações e integrações de qualquer organização, fornecedor ou stack tecnológico.
+
+Conectores suportados/planejados:
+- REST / GraphQL / Webhooks;
+- MCP;
+- filas e eventos;
+- bancos de dados;
+- ERP, CRM, fiscal, financeiro, RH, logística e sistemas públicos;
+- RPA e automações;
+- agentes próprios ou de terceiros;
+- modelos de IA de qualquer fornecedor;
+- aplicações legadas por adapters controlados.
+
+O produto não exige que o sistema protegido seja desenvolvido pela G|E.
+
+## Integrações do ecossistema G|E — Cliente Zero
 - G|E Secure: vulnerabilidades, postura e resposta.
 - G|E Data Core: dados e trilha de origem.
 - G|E Fiscal ONE: ações fiscais/contábeis reguladas por política.
@@ -45,7 +61,9 @@ Usuário/Evento → Agent Registry → Identity → Policy Engine → Risk Engin
 - G|E PMO: governança do portfólio e entregáveis.
 
 ## Cliente Zero
-O próprio ecossistema G|E. Nenhum agente deve executar ação externa crítica sem estar registrado e passar pelo controle.
+O ecossistema G|E será o primeiro ambiente real de homologação, não o limite do produto. Nenhum agente do Cliente Zero deve executar ação externa crítica sem estar registrado e passar pelo controle.
+
+A arquitetura comercial deve funcionar da mesma forma para qualquer tenant externo, sem dependência de código, banco, identidade ou infraestrutura G|E.
 
 ### Escopo P0
 - cadastro de agentes;
@@ -66,7 +84,7 @@ Para qualquer ação realizada por um agente, deve ser possível responder:
 **quem solicitou, qual agente decidiu, qual política autorizou, qual risco foi calculado, quais dados foram usados, qual ferramenta foi chamada, quem aprovou e qual foi o resultado.**
 
 ## Objetivo comercial
-Produto B2B recorrente para médias e grandes empresas adotando agentes de IA.
+Produto B2B recorrente e plataforma de infraestrutura de segurança para organizações que utilizem agentes de IA, automações ou sistemas capazes de executar ações. Pode ser comercializado como SaaS, private cloud, on-premises ou camada de controle integrada à infraestrutura do cliente.
 
 Status: **MVP P0 executável — pronto para homologação técnica do Cliente Zero; produção comercial depende dos gates de segurança documentados.**
 
