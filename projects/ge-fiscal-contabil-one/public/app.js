@@ -1,0 +1,10 @@
+const API="/api";const brl=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+async function load(){
+ const [h,t,b]=await Promise.all([fetch(API+"/integration-health").then(r=>r.json()),fetch(API+"/fuel-transactions").then(r=>r.json()),fetch(API+"/billing").then(r=>r.json())]);
+ docs.textContent=h.documents?.total||0;txs.textContent=h.transactions?.total||0;matched.textContent=h.transactions?.validated||0;exceptions.textContent=(h.transactions?.exceptions||0)+(h.transactions?.awaiting||0);
+ txRows.innerHTML=t.length?t.map(x=>`<tr><td><b>${esc(x.external_transaction_id)}</b></td><td>${esc(x.vehicle_plate)}</td><td>${esc(x.station_name)}</td><td>${Number(x.liters||0).toLocaleString("pt-BR")}</td><td>${brl(x.total_value)}</td><td>${esc(x.status)}</td></tr>`).join(""):"<tr><td colspan='6' class='muted'>Nenhuma transação.</td></tr>";
+ billRows.innerHTML=b.length?b.map(x=>`<tr><td>${esc(x.reference_month)}</td><td>${brl(x.gross_value)}</td><td>${brl(x.eligible_value)}</td><td>${brl(x.blocked_value)}</td><td>${esc(x.status)}</td></tr>`).join(""):"<tr><td colspan='5' class='muted'>Nenhum lote.</td></tr>";
+}
+txForm.addEventListener("submit",async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget).entries());if(data.transaction_at)data.transaction_at=new Date(data.transaction_at).toISOString();const r=await fetch(API+"/fuel-transactions-add",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(data)});if(!r.ok){alert("Não foi possível registrar a transação.");return}e.currentTarget.reset();await load();});
+billForm.addEventListener("submit",async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget).entries());const r=await fetch(API+"/billing-build",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(data)});if(!r.ok){alert("Não foi possível gerar o lote.");return}await load();});
+load();
