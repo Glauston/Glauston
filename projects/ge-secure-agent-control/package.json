@@ -1,0 +1,13 @@
+{
+  "name": "ge-secure-agent-control",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "G|E Secure Agent Control - governance and runtime control plane for AI agents",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test",
+    "check": "node --check src/index.js && node --check src/control-plane.js && node --check src/server.js"
+  }
+}

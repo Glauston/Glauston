@@ -1,0 +1,20 @@
+name: G|E Secure Agent Control CI
+on:
+  pull_request:
+    paths: ['projects/ge-secure-agent-control/**']
+  push:
+    paths: ['projects/ge-secure-agent-control/**']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/ge-secure-agent-control
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm run check
+      - run: npm test
