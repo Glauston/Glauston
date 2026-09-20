@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: gecontabil
+      POSTGRES_USER: gecontabil
+      POSTGRES_PASSWORD: gecontabil
+    volumes:
+      - ge_contabil_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gecontabil -d gecontabil"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_SECRET: ${APP_SECRET:-dev-only-secret-change-me}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://gecontabil:gecontabil@db:5432/gecontabil}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-480}
+      AUTO_SEND_COMMUNICATIONS: ${AUTO_SEND_COMMUNICATIONS:-false}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend:/app/frontend:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  ge_contabil_pg:
