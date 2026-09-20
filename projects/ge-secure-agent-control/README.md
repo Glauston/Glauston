@@ -68,4 +68,39 @@ Para qualquer ação realizada por um agente, deve ser possível responder:
 ## Objetivo comercial
 Produto B2B recorrente para médias e grandes empresas adotando agentes de IA.
 
-Status: **Construção / Arquitetura P0**
+Status: **MVP P0 executável — pronto para homologação técnica do Cliente Zero; produção comercial depende dos gates de segurança documentados.**
+
+
+## Implementação atual
+O branch do MVP contém:
+- runtime Node.js sem dependências externas no núcleo;
+- Agent Registry;
+- catálogo de ações;
+- Policy Engine com deny-by-default e precedência de negação;
+- Risk Engine contextual 0–100;
+- Action Gateway;
+- Approval Center com hash de payload, dupla aprovação crítica e proibição de autoaprovação;
+- idempotência contra execução duplicada;
+- Kill Switch;
+- Audit Ledger encadeado por hash e redação de segredos;
+- isolamento lógico por tenant;
+- Command Center web;
+- baseline PostgreSQL com Row Level Security;
+- autenticação de desenvolvimento e modo de produção atrás de gateway/IdP confiável;
+- Dockerfile;
+- pipeline CI;
+- testes automatizados de segurança e regras críticas.
+
+## Execução local
+```bash
+cd projects/ge-secure-agent-control
+npm test
+AUTH_MODE=dev PORT=8080 npm start
+```
+
+No modo de desenvolvimento, envie `x-tenant-id` e `x-actor-id`. O modo `dev` é bloqueado quando `NODE_ENV=production`.
+
+## Produção
+Não confundir MVP homologável com produção comercial. Antes de produção devem existir evidências para persistência PostgreSQL transacional, IdP corporativo, secret manager/KMS, TLS, backup/restore, observabilidade, SAST/secret/dependency scanning, SBOM, teste de carga e pentest defensivo autorizado.
+
+Veja `docs/security-baseline-2026.md`.
