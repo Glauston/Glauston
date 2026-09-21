@@ -135,5 +135,27 @@ Registra bloqueios, riscos, responsáveis, prazos e histórico de decisão.
 ### G|E Secure Agent Control
 Governará permissões e escopo das ações realizadas pelos agentes.
 
+
+## Programa ISO, Segurança e LGPD
+O G|E AUDIT mantém uma baseline corporativa obrigatória para preparar sistemas G|E para auditorias e certificações aplicáveis.
+
+Referência: `agents/ge-audit/compliance-readiness-baseline.md`
+
+A baseline cobre, conforme aplicabilidade:
+- ISO/IEC 27001:2022 e ISO/IEC 27002:2022;
+- ISO/IEC 27701:2025;
+- ISO/IEC 27017:2026 e ISO/IEC 27018:2025 para cloud;
+- ISO 22301, ISO/IEC 20000-1, ISO 9001 e ISO 31000;
+- ISO/IEC 25010;
+- LGPD/ANPD;
+- OWASP ASVS, Top 10 e API Security;
+- NIST SSDF;
+- WCAG 2.2 AA;
+- requisitos regulatórios e contratuais específicos.
+
+O AUDIT deve construir e manter o **Evidence Pack** de cada produto: matriz de riscos, inventário de dados, RoPA, matriz de acessos, arquitetura, políticas, procedimentos, testes, Red Team, backup/restore, incident response, fornecedores, logs, release gate e retestes.
+
+Importante: readiness/aderência interna não equivale a certificação. Somente usar "certificado ISO" quando existir certificação formal válida para o escopo declarado.
+
 ## Regra final
 Nenhum sistema G|E é considerado auditado apenas porque foi publicado. Aprovação exige evidência reproduzível e rastreável.
