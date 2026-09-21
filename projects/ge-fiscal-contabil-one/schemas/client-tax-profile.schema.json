@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ge.example/schemas/client-tax-profile.schema.json",
+  "title": "Fiscal ONE Client Tax DNA",
+  "type": "object",
+  "required": ["tenant_id","company_id","cnpj","tax_regime","establishments","activities"],
+  "properties": {
+    "tenant_id":{"type":"string"},
+    "company_id":{"type":"string"},
+    "cnpj":{"type":"string","pattern":"^[0-9]{14}$"},
+    "tax_regime":{"type":"string"},
+    "tax_regime_history":{"type":"array","items":{"type":"object"}},
+    "establishments":{"type":"array","items":{"type":"object"}},
+    "activities":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["cnae","effective_activity"],
+        "properties":{
+          "cnae":{"type":"string"},
+          "effective_activity":{"type":"string"},
+          "is_primary":{"type":"boolean"}
+        }
+      }
+    },
+    "products":{"type":"array","items":{"type":"object"}},
+    "services":{"type":"array","items":{"type":"object"}},
+    "states_of_operation":{"type":"array","items":{"type":"string"}},
+    "municipalities_of_operation":{"type":"array","items":{"type":"string"}},
+    "benefits":{"type":"array","items":{"type":"object"}},
+    "special_regimes":{"type":"array","items":{"type":"object"}},
+    "reform_profile":{"type":"object"},
+    "risk_profile":{"type":"object"},
+    "updated_at":{"type":"string","format":"date-time"}
+  },
+  "additionalProperties": true
+}
