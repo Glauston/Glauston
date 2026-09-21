@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ge.example/schemas/tax-rule.schema.json",
+  "title": "Fiscal ONE Tax Rule",
+  "type": "object",
+  "required": ["rule_id","version","jurisdiction","tax","effective_from","legal_sources","conditions","calculation","status"],
+  "properties": {
+    "rule_id": {"type":"string"},
+    "version": {"type":"integer","minimum":1},
+    "status": {"enum":["draft","testing","review","approved","published","superseded","rolled_back"]},
+    "jurisdiction": {
+      "type":"object",
+      "required":["level","country"],
+      "properties":{
+        "level":{"enum":["federal","state","municipal"]},
+        "country":{"const":"BR"},
+        "state":{"type":["string","null"]},
+        "municipality_ibge":{"type":["string","null"]}
+      }
+    },
+    "tax":{"type":"string"},
+    "effective_from":{"type":"string","format":"date"},
+    "effective_to":{"type":["string","null"],"format":"date"},
+    "conditions":{
+      "type":"object",
+      "properties":{
+        "cnae":{"type":"array","items":{"type":"string"}},
+        "ncm":{"type":"array","items":{"type":"string"}},
+        "cest":{"type":"array","items":{"type":"string"}},
+        "nbs":{"type":"array","items":{"type":"string"}},
+        "tax_regimes":{"type":"array","items":{"type":"string"}},
+        "operation_types":{"type":"array","items":{"type":"string"}},
+        "origin_ufs":{"type":"array","items":{"type":"string"}},
+        "destination_ufs":{"type":"array","items":{"type":"string"}}
+      }
+    },
+    "calculation":{
+      "type":"object",
+      "required":["method"],
+      "properties":{
+        "method":{"type":"string"},
+        "rate":{"type":["number","null"]},
+        "base_reduction":{"type":["number","null"]},
+        "credit_method":{"type":["string","null"]},
+        "formula_ref":{"type":["string","null"]}
+      }
+    },
+    "legal_sources":{
+      "type":"array",
+      "minItems":1,
+      "items":{
+        "type":"object",
+        "required":["source_type","identifier","official_url","published_at"],
+        "properties":{
+          "source_type":{"type":"string"},
+          "identifier":{"type":"string"},
+          "official_url":{"type":"string","format":"uri"},
+          "published_at":{"type":"string","format":"date"},
+          "hash":{"type":["string","null"]}
+        }
+      }
+    },
+    "evidence_score":{"enum":["A","B","C","D"]},
+    "review":{"type":"object"},
+    "tests":{"type":"array","items":{"type":"string"}}
+  },
+  "additionalProperties": false
+}
