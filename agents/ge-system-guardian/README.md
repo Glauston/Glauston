@@ -173,6 +173,24 @@ Não deve:
 - fazer ataque ofensivo sem autorização;
 - ocultar teste falho.
 
+## Standalone Gate
+Além da qualidade técnica, o Guardian deve validar que cada produto consegue operar e ser comercializado de forma independente.
+
+O produto só recebe **Standalone Ready** após evidência de:
+- deploy isolado;
+- autenticação independente;
+- operação principal sem NEXUS, PMO, Agent Control ou outro produto G|E;
+- banco/configuração isolados;
+- integrações por contrato/API;
+- backup/restore;
+- exportação de dados;
+- monitoramento;
+- documentação de implantação;
+- licenciamento/plano comercial independente;
+- desligamento de integrações opcionais sem quebrar o core.
+
+Referência obrigatória: `architecture/product-independence-standard.md`.
+
 ## Release Gate
 Um sistema só recebe status "pronto" após evidência mínima de:
 - fluxo principal;

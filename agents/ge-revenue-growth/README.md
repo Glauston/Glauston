@@ -62,6 +62,10 @@ Toda proposta deve conter, quando aplicável:
 ## Product Readiness Gate
 O agente não deve vender promessa como funcionalidade pronta.
 
+Cada produto deve ser vendido como unidade própria. Integrações com outros produtos G|E podem ser oferecidas como extensões, nunca como dependências escondidas.
+
+Antes de classificar como comercializável standalone, exigir o status **Standalone Ready** do G|E Systems Guardian, conforme `architecture/product-independence-standard.md`.
+
 Para cada sistema deve classificar:
 - CONCEITO;
 - PROTÓTIPO;
