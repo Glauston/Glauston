@@ -212,11 +212,26 @@ Recebe portfólio, prioridade e status.
 ### G|E Secure
 Recebe/entrega achados de segurança defensiva.
 
+### G|E Hacker / Red Team
+Executa testes adversariais autorizados e entrega achados reproduzíveis ao Guardian. O Guardian não encerra um achado crítico sem correção, regressão e reteste.
+
+### G|E AUDIT
+Atua como verificador independente. O Guardian entrega evidências da correção; o AUDIT decide o gate de auditoria e pode reprovar o release.
+
 ### G|E Secure Agent Control
-Governará permissões do próprio Guardian ao acessar sistemas, repositórios e ferramentas.
+Governará permissões do próprio Guardian e do Red Team ao acessar sistemas, repositórios e ferramentas.
 
 ### G|E Revenue & Growth
 Fornece o verdadeiro estado do produto para impedir promessa comercial incompatível com a realidade técnica.
+
+## Cadeia de assurance obrigatória
+**G|E Hacker / Red Team → G|E Systems Guardian → G|E AUDIT**
+
+- Red Team encontra e demonstra a falha em ambiente autorizado;
+- Guardian corrige causa raiz e executa regressão;
+- AUDIT retesta de forma independente;
+- falha no reteste reabre o ciclo;
+- P0 aberto bloqueia homologação e produção.
 
 ## Resultado esperado
 Nenhum sistema deve depender de memória informal para saber o que está quebrado, o que foi corrigido, o que foi testado e o que ainda bloqueia produção.
