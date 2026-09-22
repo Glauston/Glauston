@@ -4,6 +4,7 @@
 
 ### Product Leadership • Operations • SaaS • AI & Automation
 
+**Transformando operações complexas em produtos digitais simples, seguros e escaláveis.**  
 Building practical digital products that connect **business operations, governance, data and artificial intelligence**.
 
 [![GitHub](https://img.shields.io/badge/GitHub-Glauston-181717?logo=github&logoColor=white)](https://github.com/Glauston)
@@ -12,13 +13,13 @@ Building practical digital products that connect **business operations, governan
 
 ---
 
-## About
+## Perfil
+
+Atuo na interseção entre **produto, operações, tecnologia e negócios**, transformando necessidades operacionais complexas em sistemas mais simples de usar, governar e escalar.
+
+Meu foco atual é a evolução do **ecossistema tecnológico G|E**: produtos digitais independentes, voltados a problemas reais de operação, com forte atenção a automação, segurança da informação, auditabilidade, experiência do usuário e integração.
 
 I work at the intersection of **product, operations, technology and business**, turning complex operational needs into systems that are simpler to use, easier to govern and ready to scale.
-
-My current focus is the development of the **G|E technology ecosystem**: independent digital products designed for real operational use, with strong attention to automation, information security, auditability, user experience and integration.
-
-I am especially interested in environments where technology must solve real business problems — not just produce software.
 
 ---
 
@@ -47,7 +48,30 @@ I am especially interested in environments where technology must solve real busi
 | **Gestão de Despesas** | Corporate expenses, reimbursement, approvals, controls and audit trail |
 | **G|E Aliança Lima Transportes** | Logistics operations, routing, financial controls and delivery management |
 
-> Several products are maintained in private repositories while they are under development, validation or commercial preparation.
+> Public portfolio information is intentionally separated from proprietary source code, credentials, customer data and confidential operational details. Several products remain in private repositories while under development, validation or commercial preparation.
+
+---
+
+## Portfolio & security boundary
+
+This profile is designed to be **safe to share publicly**.
+
+### Public
+- Product vision and business problems addressed
+- High-level architecture and technology concepts
+- Sanitized screenshots and demonstrations
+- Public case studies
+- Non-confidential documentation
+- Product principles and development approach
+
+### Private by default
+- Source code of proprietary products
+- Credentials, tokens, API keys and secrets
+- Customer or employee personal data
+- Contracts, commercial values and confidential documents
+- Internal infrastructure details that could increase attack surface
+- Production databases, logs and operational evidence
+- Non-public security findings and vulnerability details
 
 ---
 
@@ -116,7 +140,7 @@ The objective is continuous evolution without losing previously validated requir
 ### NEXUS CRM
 Private product repository currently used for the evolution of a CRM/ERP platform focused on relationship management, commercial operations, customer portfolio intelligence and operational follow-up.
 
-More public case studies and product documentation will be added as projects reach the appropriate publication stage.
+Public case studies and sanitized product demonstrations can be published separately without exposing the proprietary application repository.
 
 ---
 
