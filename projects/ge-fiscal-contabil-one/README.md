@@ -75,3 +75,23 @@ O Fiscal ONE deve possuir autenticação, banco, APIs, backup/restore, observabi
 - schemas/client-tax-profile.schema.json
 
 Ambiente operacional atual: Hatchable. Código e especificações são versionados neste diretório.
+
+
+## Fundação v7 — segurança, agentes e inteligência regulatória (24/09/2026)
+
+A v7 adiciona, sem substituir os fluxos existentes:
+- contexto de organização/tenant e preparação para row-scoping;
+- identidade e política de agentes;
+- aprovação humana obrigatória para ações críticas/de alto risco;
+- G|E AUDIT, Guardian, Hacker/Red Team, Legal Watch, Fiscal Brain e Reconciliation Agent;
+- Audit Ledger append-only com encadeamento por hash;
+- Regulatory Sources + Regulatory Events com fonte oficial, vigência e urgência;
+- versionamento de regras tributárias e gate de publicação;
+- idempotency registry para integrações críticas;
+- security posture API e trilha de decisões de agentes.
+
+### Regra de segurança dos agentes
+Nenhum agente publica regra tributária crítica, altera cálculo, executa teste ativo de segurança, altera acesso, executa pagamento externo ou elimina evidência sem passar pela política e, quando aplicável, por aprovação humana.
+
+### Baseline regulatório v7
+O produto passa a modelar explicitamente CBS APIs, NFS-e Nacional, Split Payment, Duimp/RTC e janela do Simples/IBS/CBS, sempre mantendo a fonte oficial como verdade e a IA apenas como camada de interpretação.
