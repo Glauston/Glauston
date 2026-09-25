@@ -42,3 +42,15 @@ test('P1 approved boundary preserves normal allow behavior',async()=>{
   const r=await c.executeAction(ctx(),{agentId:'a1',actionId:'act1',method:'API',resource:'invoice',destination:'tax-api',executionHost:'runner-01',networkDestination:'tax-api',inputContext:{trustLevel:'VERIFIED',provenance:'signed:test'},payload:{x:1},idempotencyKey:'p1-ok'});
   assert.equal(r.status,'SUCCEEDED');
 });
+
+test('P1 evidence records contract hash trusted-input provenance and runtime context',()=>{
+  const {c}=setup();
+  c.store.agents.get('t1:a1').contract={goal:'Send invoice',goalBoundary:{allowedMethods:['API'],forbiddenMethods:[],allowedResources:['invoice'],allowedDestinations:['tax-api'],maxMonetaryValue:1000},endpointPolicy:{allowedHosts:['runner-01'],allowedDirectories:[],allowedShellCommands:[],allowedNetworkDestinations:['tax-api'],browserAllowed:false,localSecretAccess:false,processCreationAllowed:false,downloadsAllowed:false,packageInstallAllowed:false},trustedInputPolicy:{minimumTrustLevel:'VERIFIED',requireProvenanceForCritical:true}};
+  c.publishPolicy(ctx(),{rules:[{effect:'ALLOW',when:{actionCode:'invoice.send'}}]});
+  const e=c.evaluateAction(ctx(),{agentId:'a1',actionId:'act1',method:'API',resource:'invoice',destination:'tax-api',executionHost:'runner-01',networkDestination:'tax-api',inputContext:{origin:'erp',trustLevel:'VERIFIED',provenance:'signed:erp',content:'sensitive business context'},payload:{x:1}});
+  assert.equal(e.decision,'ALLOW');
+  const req=c.store.list(c.store.requests,'t1').find(r=>r.requestId===e.requestId);
+  assert.match(req.contractHash,/^sha256:/); assert.equal(req.inputContext.origin,'erp'); assert.equal(req.inputContext.provenance,'signed:erp'); assert.match(req.inputContext.contentHash,/^sha256:/); assert.equal(req.inputContext.content,undefined); assert.equal(req.runtimeContext.executionHost,'runner-01');
+  const audit=c.getAudit(ctx()).find(a=>a.eventType==='ACTION_EVALUATED'&&a.metadata.contractHash===req.contractHash);
+  assert.ok(audit); assert.equal(audit.metadata.inputContext.provenance,'signed:erp');
+});
