@@ -71,11 +71,11 @@ O Fiscal ONE deve possuir autenticação, banco, APIs, backup/restore, observabi
 - docs/LEGAL_BASELINE_2026-09-20.md
 - docs/SECURITY_ARCHITECTURE.md
 - docs/ROADMAP.md
+- docs/FISCAL_ONE_START_MEI_AND_NFSE_GATEWAY.md
 - schemas/tax-rule.schema.json
 - schemas/client-tax-profile.schema.json
 
 Ambiente operacional atual: Hatchable. Código e especificações são versionados neste diretório.
-
 
 ## Fundação v7 — segurança, agentes e inteligência regulatória (24/09/2026)
 
@@ -95,3 +95,52 @@ Nenhum agente publica regra tributária crítica, altera cálculo, executa teste
 
 ### Baseline regulatório v7
 O produto passa a modelar explicitamente CBS APIs, NFS-e Nacional, Split Payment, Duimp/RTC e janela do Simples/IBS/CBS, sempre mantendo a fonte oficial como verdade e a IA apenas como camada de interpretação.
+
+## Fundação v8 — Fiscal ONE Start/MEI, Simples e NFS-e National Gateway (28/09/2026)
+
+A v8 amplia o Fiscal ONE para atender desde o microempreendedor até operações enterprise sem fragmentar o produto.
+
+### Fiscal ONE Start / MEI
+Experiência mobile-first e de baixa complexidade operacional, com:
+- cadastro simplificado de empresa, clientes, serviços e produtos;
+- emissão e organização de documentos fiscais aplicáveis ao perfil do negócio;
+- faturamento, contas a receber/pagar e despesas;
+- conciliação e visão de caixa;
+- alertas de limite, obrigações e pendências;
+- organização de documentos para contador;
+- trilha de evolução MEI → ME → EPP sem perda de histórico.
+
+### Fiscal ONE Simples
+Camada para ME/EPP e operações do Simples Nacional, com:
+- NFS-e Nacional via gateway/API;
+- regras municipais versionadas;
+- parametrização por serviço, NBS, cClassTrib, indOp, regime e vigência;
+- preparação para IBS/CBS e demais regras de transição;
+- conciliação fiscal/financeira;
+- integração com ERP e sistemas próprios;
+- evidência de regra aplicada e histórico de versões.
+
+### Fiscal ONE Enterprise / API
+Camada para software houses, ERPs, BPOs, integradores e grandes operações, com:
+- API fiscal única e estável;
+- NFS-e National Gateway & Regulatory Adapter;
+- expansão progressiva para NF-e, NFC-e, CT-e e MDF-e;
+- motor fiscal e tributário desacoplado do ERP do cliente;
+- multiempresa/multitenant;
+- observabilidade, SLA, segurança, auditoria e integração enterprise.
+
+### NFS-e National Gateway & Regulatory Adapter
+A lógica municipal e nacional deve ser dirigida por configuração e versão, nunca por regra fixa espalhada no código do ERP.
+
+Modelo mínimo:
+Município → vigência → regime → serviço → NBS → cClassTrib → indOp → IBS/CBS/ISS → versão de tabela → API/leiaute → homologação/produção → regra anterior → evidência.
+
+Fluxo de referência:
+Empresa → Regime → Município → Operação → Serviço/NBS → Regra vigente → Cálculo → DPS → SEFIN Nacional/API → NFS-e → XML/DANFSe → Financeiro → Contábil → Data Core → AUDIT.
+
+### Regulatory Auto-Update Engine
+O G|E RADAR GLOBAL passa a alimentar um fluxo operacional de adequação:
+Radar detecta alteração oficial → MAESTRO abre demanda → Legal Watch valida fonte/vigência → Fiscal ONE recebe nova versão de regra/leiaute → testes automatizados → homologação → publicação controlada → Data Core preserva versão/evidência → AUDIT registra decisão → NEXUS identifica clientes impactados e acompanha tratativas.
+
+### Princípio de produto
+O pequeno empresário não deve precisar conhecer a complexidade fiscal interna. A experiência deve traduzir intenção de negócio em operação fiscal assistida, mantendo revisão humana e fonte oficial como autoridade para decisões críticas.
