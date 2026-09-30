@@ -1,0 +1,152 @@
+version: 1
+name: GE_AGENT_STACK
+mandatory_for_new_products: true
+principles:
+  - preserve_homologated_baseline
+  - evidence_before_status
+  - deploy_is_not_validation
+  - no_p0_release
+  - security_privacy_quality_by_design
+  - adapters_for_external_integrations
+  - rollback_and_observability_by_default
+
+agents:
+  - id: product_owner
+    path: agents/ge-product-owner
+    phase: discovery
+    blocking: true
+    outputs: [requirements, personas, acceptance_criteria, permission_matrix, business_rules]
+
+  - id: lean_six_sigma_black_belt
+    path: agents/ge-lean-six-sigma-black-belt
+    phase: process_design
+    blocking: true
+    outputs: [sipoc, as_is, to_be, fmea, root_cause, kpis, control_plan]
+
+  - id: principal_software_engineer
+    path: agents/ge-principal-software-engineer
+    phase: architecture_engineering
+    blocking: true
+    outputs: [architecture, adr, data_model, api_contracts, migration_plan, rollback_plan]
+
+  - id: ux_ui_experience
+    path: agents/ge-ux-ui-experience
+    phase: experience_design
+    blocking: true
+    outputs: [journeys, states, design_rules, accessibility, responsive_behavior]
+
+  - id: integration_architect
+    path: agents/ge-integration-architect
+    phase: architecture_engineering
+    blocking: true
+    outputs: [integration_contracts, adapters, retries, idempotency, reconciliation, fallback]
+
+  - id: data_ai_governance
+    path: agents/ge-data-ai-governance
+    phase: architecture_engineering
+    blocking: true
+    outputs: [source_of_truth, classification, lineage, retention, privacy_controls, ai_controls]
+
+  - id: security_architect_devsecops
+    path: agents/ge-security-architect-devsecops
+    phase: security_design
+    blocking: true
+    outputs: [threat_model, authz_model, secrets_controls, appsec_controls, security_tests]
+
+  - id: qa_excellence
+    path: agents/ge-qa-excellence
+    phase: verification
+    blocking: true
+    outputs: [test_matrix, automated_tests, e2e, negative_tests, regression, evidence]
+
+  - id: hacker_red_team
+    path: agents/ge-hacker-red-team
+    phase: adversarial_verification
+    conditional: authorized_and_risk_applicable
+    blocking_on_p0_p1: true
+    outputs: [adversarial_findings, evidence, retest]
+
+  - id: systems_guardian
+    path: agents/ge-system-guardian
+    phase: repair_hardening
+    blocking: true
+    outputs: [root_cause, fixes, hardening, regression_results]
+
+  - id: sre_observability
+    path: agents/ge-sre-observability
+    phase: operational_readiness
+    blocking: true
+    outputs: [health, logs, metrics, alerts, sli_slo, backup_restore, runbooks]
+
+  - id: release_devsecops
+    path: agents/ge-release-devsecops
+    phase: release_readiness
+    blocking: true
+    outputs: [ci_cd, artifact_traceability, deploy_verification, smoke_test, rollback]
+
+  - id: iso_qms_readiness
+    path: agents/ge-iso-qms-readiness
+    phase: management_system_assurance
+    blocking_on_critical_nonconformity: true
+    outputs: [qms_gap, capa, process_evidence, readiness_assessment]
+
+  - id: audit
+    path: agents/ge-audit
+    phase: independent_assurance
+    blocking: true
+    outputs: [audit_report, residual_risk, gate_decision, evidence_pack]
+
+  - id: pmo_delivery
+    path: agents/ge-pmo-delivery
+    phase: all
+    blocking_on_status_mismatch: true
+    outputs: [roadmap, risks, owners, dependencies, release_status, decision_log]
+
+  - id: revenue_growth
+    path: agents/ge-revenue-growth
+    phase: commercialization
+    conditional: product_entering_market
+    blocking_on_false_claim: true
+    outputs: [product_card, icp, proposal, positioning, commercial_materials]
+
+  - id: secure_agent_control
+    path: projects/ge-secure-agent-control
+    phase: external_agent_actions
+    conditional: automated_external_action
+    blocking: true
+    outputs: [authorization, scope, policies, audit_trail]
+
+workflow:
+  - product_owner
+  - lean_six_sigma_black_belt
+  - principal_software_engineer
+  - ux_ui_experience
+  - integration_architect
+  - data_ai_governance
+  - security_architect_devsecops
+  - implementation
+  - qa_excellence
+  - hacker_red_team
+  - systems_guardian
+  - qa_excellence_regression
+  - hacker_red_team_retest
+  - sre_observability
+  - release_devsecops
+  - iso_qms_readiness
+  - audit
+  - business_homologation
+  - production
+  - monitor_improve
+
+release_blockers:
+  - p0_open
+  - homologated_regression
+  - data_loss_or_corruption
+  - unauthorized_access
+  - tenant_isolation_failure
+  - critical_financial_or_fiscal_error
+  - critical_flow_broken
+  - published_version_not_verified
+  - critical_integration_without_failure_strategy
+  - unsafe_migration_or_missing_rollback
+  - insufficient_evidence
