@@ -1,6 +1,6 @@
 # G|E Ecosystem Evolution Roadmap — Radar-Driven Architecture
 
-Atualização: 05/10/2026
+Atualização: 06/10/2026
 
 ## Objetivo
 Transformar descobertas do G|E RADAR GLOBAL em uma arquitetura coerente, versionada e comercializável, evitando proliferação de módulos isolados.
@@ -9,6 +9,54 @@ Transformar descobertas do G|E RADAR GLOBAL em uma arquitetura coerente, version
 O ecossistema G|E deve operar como um closed loop:
 
 RADAR detecta mudança → Legal/Regulatory Watch valida → MAESTRO cria missão → motor especializado interpreta/aplica → Secure Agent Control autoriza → Guardian observa/contém → Data Core preserva estado/linhagem/evidência → AUDIT comprova → NEXUS acompanha cliente/impacto → melhoria retorna ao roadmap.
+
+## Produto transversal prioritário
+### G|E Agent Trust & Control Plane
+Produto comercial que unifica:
+- Secure Agent Control;
+- Guardian;
+- Data Core;
+- AUDIT;
+- integração opcional com MAESTRO.
+
+Posicionamento: camada vendor-neutral para descobrir, identificar, testar, certificar, autorizar, limitar, observar, conter, provar, reverter e recertificar agentes empresariais.
+
+Capacidades promovidas pelo RADAR:
+- Universal Agent Registry;
+- Live Governance Graph;
+- Agent Identity Passport;
+- Delegated Human Authority;
+- Contextual / Purpose-Bound Permissions;
+- Dynamic Authority Ladder;
+- Capability-Based Agent Security;
+- PAAM — Privileged Agent Access Management;
+- Credentialless Agent Architecture;
+- Agent Permission Blast Radius;
+- Authority & Consequence Graph;
+- Collective Authority Graph para swarms;
+- Agent Supply Chain Gate;
+- Agent Transaction Isolation;
+- Agent Action Ledger;
+- Transactional Rewind;
+- Reversibility Class;
+- Agent Behavioral Genome;
+- Machine-Speed Behavioral Correlation;
+- Agentic Attack Velocity Engine;
+- Economic Authority / Economic Circuit Breaker;
+- Physical Action Boundary;
+- Consent Propagation;
+- Agent Privacy Control Plane;
+- Agent Evidence Chain;
+- Agent License to Operate;
+- Continuous Agent Recertification;
+- Guardian Red Team Arena;
+- Continuous Adversarial Validation;
+- Agent Simulation & Digital Twin Lab;
+- Crypto-Agility / PQC readiness.
+
+Regra estrutural:
+**CAN DO != MAY DO.**
+Competência técnica não implica autoridade operacional.
 
 ---
 
@@ -35,7 +83,9 @@ Evolução prioritária:
 - Fleet/Agent Inventory;
 - Multi-Agent Composite Authority;
 - capability risk tiering;
-- model placement LOCAL / PRIVATE / PUBLIC CLOUD.
+- model placement LOCAL / PRIVATE / PUBLIC CLOUD;
+- Resource & Economic Control Plane;
+- Autonomous Improvement Loop.
 
 ### 3. G|E Secure Agent Control — autoridade e governança
 Componentes prioritários:
@@ -57,6 +107,9 @@ Componentes prioritários:
 - Agent Gateway Security Boundary;
 - Agent Privacy & Consent Control Plane;
 - Consent Propagation;
+- Dynamic Authority Ladder;
+- Collective Authority Graph;
+- Economic Circuit Breaker;
 - Crypto & Identity Inventory;
 - Crypto-Agility / PQC Readiness.
 
@@ -66,29 +119,38 @@ Diretriz: Agent != Security Authority.
 Capacidades:
 - Independent Guardian Plane;
 - out-of-band enforcement;
-- behavior analytics / behavioral baseline;
+- behavior analytics / Agent Behavioral Genome;
 - drift detection;
 - egress/network anomaly detection;
-- kill switch individual e por árvore de delegação;
+- kill switch individual, swarm e por árvore de delegação;
 - quarantine / revoke / reduce capability;
 - sandbox escape containment;
 - disposable agent environments;
+- machine-speed behavioral correlation;
+- agentic attack velocity detection;
+- economic circuit breaker;
 - physical safety boundary;
 - independent telemetry/evidence;
 - agent incident detection;
-- trajectory forensics.
+- trajectory forensics;
+- Red Team Arena;
+- continuous adversarial validation.
 
 ### 5. G|E Data Core — governed state, lineage & evidence
 Evolução:
 - Agent Data Capsules;
 - memory classes: semantic / episodic / procedural / operational;
 - Evidence Trust / Provenance Layer;
+- Agent Evidence Chain;
+- Agent Action Ledger;
 - immutable/versioned evidence;
 - cryptographic lineage;
 - regulatory version lineage;
 - consent/deletion propagation lineage;
+- Transaction Evidence Graph;
 - Payment ↔ Tax Reconciliation Ledger;
 - Tax Deduction Ledger;
+- Business Transaction Fabric;
 - tenant isolation;
 - data products with policy-as-data;
 - metering/billing for data/API/agent usage.
@@ -96,12 +158,15 @@ Evolução:
 ### 6. G|E AUDIT — assurance, evidence & readiness
 Pacotes:
 - Agent Security Assessment;
-- Agent Exposure Assessment;
+- Agent Discovery & Exposure Assessment;
+- Autonomy & Authority Assessment;
 - AI Gateway & Runtime Assessment;
 - Agent Workaround Testing;
 - Sandbox Escape Assessment;
 - Agent Incident Readiness;
 - Agent Privacy & LGPD Readiness;
+- Agent Assurance & Evidence Certification;
+- Agent License to Operate / recertification;
 - PQC Readiness Assessment;
 - Physical AI Safety Assessment;
 - Regulatory Calculation Evidence;
@@ -115,8 +180,11 @@ Pacotes:
 - Client Tax DNA;
 - Deterministic Tax Rules Engine;
 - Tax Legal Knowledge Engine;
-- Regulatory Knowledge Graph;
+- Fiscal Regulatory Knowledge Graph;
+- Regulatory Trigger Engine;
+- Fiscal Effective-Date Engine;
 - Tax Decision Intelligence;
+- Fiscal-to-Payment Intelligence;
 - Fiscal/Contábil integration;
 - versioned official-source rules;
 - legal/technical evidence;
@@ -132,8 +200,9 @@ Pacotes:
 6. Simples Hybrid Decision Engine / Simples 2027 Simulator.
 7. Global Minimum Tax / GloBE Engine.
 8. Logistics Regulatory Engine / ANTT Freight Compliance.
-9. Regulatory Trigger Engine.
-10. High-Volume Fiscalization layer for platforms/marketplaces when officially defined.
+9. Fuel & Energy Tax Engine.
+10. Regulatory Trigger Engine.
+11. High-Volume Fiscalization layer for platforms/marketplaces when officially defined.
 
 ### Fiscal operating rule
 AI interprets/orchestrates; deterministic, versioned engines calculate and enforce critical fiscal rules.
@@ -141,7 +210,6 @@ AI interprets/orchestrates; deterministic, versioned engines calculate and enfor
 ---
 
 ## Private / Sovereign AI deployment
-
 Supported target modes:
 - G|E Cloud;
 - Private Cloud;
@@ -162,11 +230,18 @@ Requirements:
 
 ## Commercial packages
 
+### G|E Agent Trust & Control Plane
+Control plane completo para força de trabalho agentic.
+
+### G|E Agent Discovery & Exposure Assessment
+Entrada comercial de baixo atrito:
+discover agents, shadow agents, MCPs, tools, owners, privileges, credentials, data access, egress, authority chains, blast radius e kill-switch readiness.
+
 ### G|E Agent Security Enterprise
 Secure Agent Control + Guardian + AUDIT + Data Core telemetry.
 
-### G|E Agent Exposure Assessment
-Discover agents, MCPs, tools, owners, privileges, credentials, data access, egress and kill-switch readiness.
+### G|E Agent Assurance & Certification
+Digital Twin + Red Team Arena + Evidence Chain + License to Operate + recertification.
 
 ### G|E Private AI Appliance
 Validated hardware + local models + MAESTRO + Secure + Guardian + Data Core + AUDIT.
@@ -191,34 +266,45 @@ ANTT floor price, CIOT-related controls, temporal rule versioning and evidence.
 ## Priority sequence
 
 ### P0 — build / harden now
+- Universal Agent Registry;
 - Agent Identity Passport;
 - Delegated Human Authority;
+- Capability Broker;
+- PAAM;
 - Durable Agent Runtime;
 - Independent Guardian Plane;
 - Data Egress Guard;
 - Agent Network Control;
 - Agent Data Capsules;
+- Agent Evidence Chain;
+- Agent Action Ledger;
+- Authority & Consequence Graph;
+- Collective Authority Graph;
 - National DFe Regulatory Gateway;
 - Split Payment Gateway;
 - Payment ↔ Tax Reconciliation Ledger;
 - DeRE Adapter;
 - Municipal Regulatory Overlay;
+- Fiscal Effective-Date Engine;
 - Regulatory Auto-Update workflow;
 - QA/regression gates;
 - immutable evidence.
 
 ### P1 — next commercialization wave
-- Agent Exposure Assessment;
+- Agent Discovery & Exposure Assessment;
 - AI Gateway & Runtime Assessment;
+- Agent Assurance & Certification;
 - Agent Incident Readiness;
 - Simples 2027 Simulator;
 - Fiscal ONE Embedded/API;
 - partner model for accountants/BPOs/ERPs/PSPs;
-- Private Agent Node.
+- Private Agent Node;
+- Business Transaction Fabric.
 
 ### P2 — strategic expansion
 - GloBE Engine;
 - Financial Regulatory Packs;
+- Fuel/Fleet/Mobility Edition;
 - Physical AI Safety;
 - PQC/Crypto Agility;
 - Advanced/Hybrid Compute Provider Layer;
@@ -230,6 +316,12 @@ ANTT floor price, CIOT-related controls, temporal rule versioning and evidence.
 
 ### Security Gate
 No critical agent action without identity, authority, policy, runtime controls and evidence.
+
+### Collective Authority Gate
+Nenhum swarm ou cadeia de delegação pode adquirir, por composição, autoridade superior à originalmente delegada.
+
+### Agent Certification Gate
+Nenhum agente crítico entra em produção sem função definida, testes de competência, segurança, authority level, environment scope e validade de certificação.
 
 ### Fiscal Gate
 No production rule without official source, version, effective date, test, review, approval and rollback.
@@ -249,6 +341,8 @@ No module promoted as product without target user, pain, proof-of-value, pricing
 ---
 
 ## KPIs de evolução
+- % de agentes descobertos vs. estimados;
+- % de agentes com owner humano;
 - % de ações críticas com authority proof;
 - % de agent runs com durable checkpoints;
 - % de egress coberto por policy;
@@ -256,9 +350,12 @@ No module promoted as product without target user, pain, proof-of-value, pricing
 - % de regras regulatórias com source + version + effective date;
 - tempo RADAR → regra homologada;
 - taxa de regressão fiscal;
-- incident containment time;
+- MTTA — Mean Time to Agent Containment;
+- % de ações mutáveis com rollback/compensation definido;
+- % de agentes críticos certificados e dentro da validade;
 - % de clientes impactados automaticamente identificados;
 - receita recorrente por API/tenant/agent/work unit;
+- número de assessments convertidos em piloto;
 - número de pilotos convertidos em produção.
 
 ---
