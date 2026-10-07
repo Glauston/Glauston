@@ -368,3 +368,89 @@ Toda descoberta deve cair em uma das categorias:
 4. descartar por falta de materialidade.
 
 Nenhuma tendência entra no produto só por novidade. Deve resolver problema real, fortalecer segurança/compliance, gerar eficiência mensurável ou abrir receita defensável.
+
+
+---
+
+# FAST-TRACK — Agent Trust & Control Plane (07/10/2026)
+
+## Objetivo
+Sair de arquitetura registrada para MVP demonstrável e vendável com a menor superfície possível, sem perder o diferencial estratégico.
+
+## Benchmark mínimo
+O produto deve atingir paridade funcional demonstrável com categorias já aparecendo em RSA, SailPoint, AppViewX e Transcend:
+- discovery/shadow agents;
+- agent identity + human owner;
+- MCP/tool governance;
+- runtime authorization;
+- JIT/temporary permissions;
+- kill switch;
+- audit/evidence;
+- private/on-prem/air-gapped readiness.
+
+## Diferencial obrigatório G|E
+- Mission-Bound Authority;
+- Process-State Authorization;
+- Authority & Consequence Graph;
+- Collective Authority Graph;
+- Progressive Containment;
+- Business Consequence Trace;
+- Reversibility/Compensation;
+- Verifiable Agent Receipt;
+- License to Operate;
+- Continuous Compliance Evidence Mapping.
+
+## Sequência executiva
+
+### P0-A — demonstrar
+1. Universal Agent Registry.
+2. Agent Passport + Human Owner.
+3. MCP/Tool Inventory.
+4. Policy Decision Point / Policy Enforcement Point.
+5. Mission-Bound Authority.
+6. Guardian Progressive Containment.
+7. Agent Action Ledger.
+8. Evidence Chain + Verifiable Receipt.
+9. Blast Radius dashboard.
+10. MTTA dashboard.
+
+### P0-B — diferenciar
+1. Process-State Authorization.
+2. Authority & Consequence Graph.
+3. Collective Authority Graph.
+4. Business Consequence Trace.
+5. Reversibility Class.
+6. License to Operate.
+7. Event-Driven Recertification.
+8. Continuous Compliance Evidence Mapping.
+
+### P1 — vender
+1. Agent Discovery & Exposure Assessment.
+2. Pilot Control & Containment.
+3. Agent Assurance & Certification.
+4. Private/Sovereign deployment package.
+5. Sector policy packs: financeiro, telecom, governo, logística, fiscal.
+
+## Demo mínima obrigatória
+Cenário:
+- agente legítimo recebe missão;
+- capability temporária é emitida;
+- agente tenta ação fora do estado/processo permitido;
+- Secure nega;
+- Guardian reduz autoridade sem matar todo o agente;
+- Action Ledger registra;
+- Verifiable Receipt é emitido;
+- dashboard mostra blast radius evitado;
+- AUDIT mapeia evidência a controle/framework;
+- mudança no agente dispara recertificação.
+
+## Regra de foco
+Nenhuma nova funcionalidade entra em P0 se não melhorar diretamente um destes quatro eixos:
+1. vender;
+2. provar diferencial;
+3. reduzir risco;
+4. acelerar piloto.
+
+## Meta comercial
+Assessment → piloto → produção.
+O produto deve ser explicável em menos de 2 minutos e demonstrável em uma única história de risco real.
