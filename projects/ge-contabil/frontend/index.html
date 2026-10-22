@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>G|E CONTÁBIL</title>
+<style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;background:#f5f7fb;color:#172033}*{box-sizing:border-box}body{margin:0}header{background:#111827;color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.3px}.wrap{max-width:1180px;margin:auto;padding:24px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;box-shadow:0 1px 3px #0000000a}.kpi{font-size:28px;font-weight:800;margin-top:8px}.muted{color:#667085;font-size:13px}.row{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:16px}.badge{padding:4px 8px;border-radius:999px;background:#eef2ff;font-size:12px}.danger{background:#fee2e2}.warning{background:#fef3c7}button{border:0;border-radius:9px;padding:9px 12px;background:#111827;color:white;cursor:pointer}input{padding:10px;border:1px solid #d0d5dd;border-radius:9px;width:100%}.login{max-width:420px;margin:8vh auto}.hidden{display:none}.toolbar{display:flex;gap:8px;align-items:center}.agent{border-left:4px solid #111827}.clientline{display:flex;justify-content:space-between;gap:10px;align-items:center}.score{font-weight:800}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr}}@media(max-width:520px){.grid{grid-template-columns:1fr}.wrap{padding:14px}header{padding:14px}}
+</style>
+</head>
+<body>
+<header><div class="brand">G|E CONTÁBIL <span class="muted" style="color:#cbd5e1">Control Tower</span></div><div class="toolbar"><span id="who"></span><button id="logout" class="hidden">Sair</button></div></header>
+<div class="wrap">
+<section id="login" class="login card">
+<h2>Acesso</h2><p class="muted">Ambiente de demonstração/homologação.</p>
+<label>E-mail</label><input id="email" value="admin@demo.local"><br><br>
+<label>Senha</label><input id="password" type="password" value="Admin@123"><br><br>
+<button onclick="doLogin()">Entrar</button><p id="loginerr" class="muted"></p>
+</section>
+<section id="app" class="hidden">
+<div class="grid">
+<div class="card"><div class="muted">Clientes ativos</div><div class="kpi" id="kclients">—</div></div>
+<div class="card"><div class="muted">Obrigações abertas</div><div class="kpi" id="kobs">—</div></div>
+<div class="card"><div class="muted">Documentos pendentes</div><div class="kpi" id="kdocs">—</div></div>
+<div class="card"><div class="muted">Risco alto/crítico</div><div class="kpi" id="krisk">—</div></div>
+<div class="card"><div class="muted">Saúde média</div><div class="kpi" id="khealth">—</div></div>
+</div>
+<div class="row">
+<div class="card"><h3>Carteira de clientes</h3><div id="clients"></div></div>
+<div class="card agent"><h3>Charly Fiscal — prioridades</h3><p class="muted">Priorização automática baseada em prazo, risco e documentos faltantes.</p><div id="alerts"></div></div>
+</div>
+<div class="card" style="margin-top:16px"><h3>Integrações oficiais</h3><div id="integrations" class="muted"></div></div>
+</section>
+</div>
+<script>
+let token=localStorage.getItem('ge_token')||'';
+async function api(path,opt={}){opt.headers={...(opt.headers||{}),Authorization:`Bearer ${token}`};const r=await fetch(path,opt);if(!r.ok){throw new Error((await r.json()).detail||r.statusText)}return r.json()}
+async function doLogin(){const data=new URLSearchParams();data.append('username',email.value);data.append('password',password.value);try{const r=await fetch('/api/auth/login',{method:'POST',body:data});const j=await r.json();if(!r.ok)throw new Error(j.detail);token=j.access_token;localStorage.setItem('ge_token',token);await load()}catch(e){loginerr.textContent=e.message}}
+async function load(){if(!token)return;try{const me=await api('/api/me');login.classList.add('hidden');app.classList.remove('hidden');logout.classList.remove('hidden');who.textContent=`${me.name} · ${me.role}`;const [d,c,a,i]=await Promise.all([api('/api/dashboard'),api('/api/clients'),api('/api/agent/review'),api('/api/integrations/status')]);kclients.textContent=d.clients_active;kobs.textContent=d.obligations_open;kdocs.textContent=d.pending_documents;krisk.textContent=d.critical_or_high;khealth.textContent=d.average_health+'%';clients.innerHTML=c.map(x=>`<div class="clientline" style="padding:10px 0;border-bottom:1px solid #eef1f5"><div><b>${x.name}</b><div class="muted">${x.tax_regime} · ${x.cnpj}</div></div><div class="score">${x.health_score}/100</div></div>`).join('');alerts.innerHTML=a.alerts.slice(0,8).map(x=>`<div style="padding:10px 0;border-bottom:1px solid #eef1f5"><b>${x.client}</b> · ${x.obligation}<br><span class="badge ${x.risk==='high'?'danger':x.risk==='medium'?'warning':''}">${x.risk}</span> <span class="muted">${x.days_to_due} dias · ${x.pending_documents} docs pendentes</span><div class="muted">${x.recommended_action}</div></div>`).join('')||'<p class="muted">Sem alertas.</p>';integrations.innerHTML=Object.entries(i).filter(([k])=>k!=='auto_transmission').map(([k,v])=>`<b>${k}</b>: ${v.status}<br>`).join('')+'<br><b>Transmissão automática:</b> desabilitada por segurança.'}catch(e){localStorage.removeItem('ge_token');token='';login.classList.remove('hidden');app.classList.add('hidden');loginerr.textContent='Faça login novamente.'}}
+logout.onclick=()=>{localStorage.removeItem('ge_token');location.reload()};load();
+</script>
+</body>
+</html>
