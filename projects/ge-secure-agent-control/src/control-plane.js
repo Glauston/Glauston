@@ -2,13 +2,14 @@ import { MemoryStore } from './store.js';
 import { evaluateRisk } from './risk-engine.js';
 import { evaluatePolicy } from './policy-engine.js';
 import { assert, sha256, uuid } from './security.js';
+import { normalizeAgentContract, evaluateRuntimeBoundary } from './runtime-governance.js';
 
 export class AgentControl {
   constructor({store=new MemoryStore(), executors={}}={}) { this.store=store; this.executors=executors; }
 
   registerAgent(ctx, input) {
     assert(input.name && input.ownerUserId && input.version, 'INVALID_AGENT', 'name, ownerUserId and version are required');
-    const agent={id:input.id||uuid(), tenantId:ctx.tenantId, name:input.name, ownerUserId:input.ownerUserId, version:input.version, environment:input.environment||'dev', status:input.status||'DRAFT', riskTier:input.riskTier||'STANDARD'};
+    const agent={id:input.id||uuid(), tenantId:ctx.tenantId, name:input.name, ownerUserId:input.ownerUserId, version:input.version, environment:input.environment||'dev', status:input.status||'DRAFT', riskTier:input.riskTier||'STANDARD', contract:input.contract?normalizeAgentContract(input.contract):null};
     this.store.put(this.store.agents, ctx.tenantId, agent); this.audit(ctx,'AGENT_REGISTERED','AGENT',agent.id,{status:agent.status}); return agent;
   }
   registerAction(ctx,input){
@@ -36,14 +37,19 @@ export class AgentControl {
     const requestId=input.requestId||uuid(), traceId=input.traceId||uuid(), payloadHash=sha256(input.payload||{});
     if(this.isKilled(ctx.tenantId,agent.id,action.id,input.environment||agent.environment)) return this.decision(ctx,{requestId,traceId,agent,action,input,payloadHash},'DENY',{score:100,level:'CRITICAL',signals:[{code:'KILL_SWITCH',points:100}]},['KILL_SWITCH_ACTIVE']);
     const risk=evaluateRisk({baseRisk:action.baseRisk,operationType:action.operationType,dataClassification:input.dataClassification||action.dataClassification,monetaryValue:input.monetaryValue,destination:input.destination,newDestination:input.newDestination,unusualTime:input.unusualTime,recentAgentChange:input.recentAgentChange,consecutiveFailures:input.consecutiveFailures,scopeExpansionAttempt:input.scopeExpansionAttempt});
+    const boundary=evaluateRuntimeBoundary(agent,input,risk);
+    if(boundary.decision==='DENY') {
+      const boundaryRisk={...risk,score:Math.max(risk.score,85),level:'CRITICAL',signals:[...risk.signals,...boundary.signals.map(s=>({code:s.code,points:0,detail:s.detail}))]};
+      return this.decision(ctx,{requestId,traceId,agent,action,input,payloadHash},'DENY',boundaryRisk,boundary.reasonCodes,null,boundary.contractHash);
+    }
     const p=evaluatePolicy(this.store.list(this.store.policies,ctx.tenantId),{agentId:agent.id,actionId:action.id,actionCode:action.code,operationType:action.operationType,dataClassification:input.dataClassification||action.dataClassification,environment:input.environment||agent.environment,riskLevel:risk.level,riskScore:risk.score,destination:input.destination,monetaryValue:Number(input.monetaryValue||0)});
     let final=p.decision;
     if(risk.level==='CRITICAL' && final==='ALLOW') final='REQUIRE_APPROVAL';
-    return this.decision(ctx,{requestId,traceId,agent,action,input,payloadHash},final,risk,p.reasonCodes,p.policy);
+    return this.decision(ctx,{requestId,traceId,agent,action,input,payloadHash},final,risk,p.reasonCodes,p.policy,boundary.contractHash);
   }
-  decision(ctx,b,decision,risk,reasonCodes,policy=null){
-    const req={id:uuid(),tenantId:ctx.tenantId,requestId:b.requestId,traceId:b.traceId,agentId:b.agent.id,agentVersion:b.agent.version,actionId:b.action.id,actionCode:b.action.code,environment:b.input.environment||b.agent.environment,payloadHash:b.payloadHash,payload:b.input.payload||{},destination:b.input.destination||null,monetaryValue:Number(b.input.monetaryValue||0),risk,decision,reasonCodes,policy,status:decision==='DENY'?'DENIED':decision==='REQUIRE_APPROVAL'?'APPROVAL_REQUIRED':'AUTHORIZED',createdAt:new Date().toISOString()};
-    this.store.put(this.store.requests,ctx.tenantId,req); this.audit({...ctx,requestId:req.requestId,traceId:req.traceId,agentId:req.agentId},'ACTION_EVALUATED','ACTION_REQUEST',req.id,{decision,risk,reasonCodes,policy});
+  decision(ctx,b,decision,risk,reasonCodes,policy=null,contractHash=null){
+    const req={id:uuid(),tenantId:ctx.tenantId,requestId:b.requestId,traceId:b.traceId,agentId:b.agent.id,agentVersion:b.agent.version,actionId:b.action.id,actionCode:b.action.code,environment:b.input.environment||b.agent.environment,payloadHash:b.payloadHash,payload:b.input.payload||{},contractHash, inputContext:b.input.inputContext?{origin:b.input.inputContext.origin||null,trustLevel:b.input.inputContext.trustLevel||'UNTRUSTED',provenance:b.input.inputContext.provenance||null,contentHash:b.input.inputContext.contentHash||sha256(b.input.inputContext.content||b.input.inputContext)}:null,runtimeContext:{method:b.input.method||null,resource:b.input.resource||null,executionHost:b.input.executionHost||null,directory:b.input.directory||null,shellCommand:b.input.shellCommand||null,networkDestination:b.input.networkDestination||null},destination:b.input.destination||null,monetaryValue:Number(b.input.monetaryValue||0),risk,decision,reasonCodes,policy,contractHash,status:decision==='DENY'?'DENIED':decision==='REQUIRE_APPROVAL'?'APPROVAL_REQUIRED':'AUTHORIZED',createdAt:new Date().toISOString()};
+    this.store.put(this.store.requests,ctx.tenantId,req); this.audit({...ctx,requestId:req.requestId,traceId:req.traceId,agentId:req.agentId},'ACTION_EVALUATED','ACTION_REQUEST',req.id,{decision,risk,reasonCodes,policy,contractHash,inputContext:req.inputContext,runtimeContext:req.runtimeContext});
     let approvalRequestId=null;
     if(decision==='REQUIRE_APPROVAL'||decision==='REQUIRE_STEP_UP_AUTH'){
       const ap={id:uuid(),tenantId:ctx.tenantId,actionRequestId:req.id,payloadHash:req.payloadHash,requiredApprovals:risk.level==='CRITICAL'?2:1,status:'PENDING',decisions:[],expiresAt:new Date(Date.now()+15*60*1000).toISOString(),createdAt:new Date().toISOString()};
