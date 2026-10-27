@@ -42,7 +42,7 @@ export class AgentControl {
     return this.decision(ctx,{requestId,traceId,agent,action,input,payloadHash},final,risk,p.reasonCodes,p.policy);
   }
   decision(ctx,b,decision,risk,reasonCodes,policy=null){
-    const req={id:uuid(),tenantId:ctx.tenantId,requestId:b.requestId,traceId:b.traceId,agentId:b.agent.id,agentVersion:b.agent.version,actionId:b.action.id,actionCode:b.action.code,environment:b.input.environment||b.agent.environment,payloadHash:b.payloadHash,payload:b.input.payload||{},destination:b.input.destination||null,monetaryValue:Number(b.input.monetaryValue||0),risk,decision,reasonCodes,policy,status:decision==='DENY'?'DENIED':decision==='REQUIRE_APPROVAL'?'APPROVAL_REQUIRED':'AUTHORIZED',createdAt:new Date().toISOString()};
+    const req={id:uuid(),tenantId:ctx.tenantId,requestId:b.requestId,traceId:b.traceId,agentId:b.agent.id,agentVersion:b.agent.version,actionId:b.action.id,actionCode:b.action.code,environment:b.input.environment||b.agent.environment,dataClassification:b.input.dataClassification||b.action.dataClassification,payloadHash:b.payloadHash,payload:b.input.payload||{},destination:b.input.destination||null,monetaryValue:Number(b.input.monetaryValue||0),risk,decision,reasonCodes,policy,status:decision==='DENY'?'DENIED':decision==='REQUIRE_APPROVAL'?'APPROVAL_REQUIRED':'AUTHORIZED',createdAt:new Date().toISOString()};
     this.store.put(this.store.requests,ctx.tenantId,req); this.audit({...ctx,requestId:req.requestId,traceId:req.traceId,agentId:req.agentId},'ACTION_EVALUATED','ACTION_REQUEST',req.id,{decision,risk,reasonCodes,policy});
     let approvalRequestId=null;
     if(decision==='REQUIRE_APPROVAL'||decision==='REQUIRE_STEP_UP_AUTH'){
@@ -72,7 +72,31 @@ export class AgentControl {
   async executeAuthorized(ctx,requestId,idempotencyKey){
     const idemKey=`${ctx.tenantId}:${idempotencyKey}`; if(this.store.idempotency.has(idemKey)&&this.store.idempotency.get(idemKey).status==='SUCCEEDED') return structuredClone(this.store.idempotency.get(idemKey));
     const req=this.store.list(this.store.requests,ctx.tenantId).find(r=>r.requestId===requestId); assert(req,'REQUEST_NOT_FOUND','Request not found',404); assert(!this.isKilled(ctx.tenantId,req.agentId,req.actionId,req.environment),'KILL_SWITCH_ACTIVE','Kill switch active',423);
-    const action=this.store.get(this.store.actions,ctx.tenantId,req.actionId); const executor=this.executors[action.integrationId]||this.executors.default; assert(executor,'EXECUTOR_NOT_CONFIGURED','No executor configured',503);
+    // FORTRESS 3.1: authorization and approval can be revoked after initial evaluation.
+    // Enforcement here remains outside the LLM and immediately precedes the tool call.
+    assert(['ALLOW','REQUIRE_APPROVAL','REQUIRE_STEP_UP_AUTH'].includes(req.decision),'REQUEST_NOT_AUTHORIZED','Request has no executable authorization',403);
+    const agent=this.store.get(this.store.agents,ctx.tenantId,req.agentId);
+    assert(agent.status==='ACTIVE','AGENT_INACTIVE','Agent is not active',403);
+    const action=this.store.get(this.store.actions,ctx.tenantId,req.actionId);
+    assert(action.status==='ACTIVE','ACTION_INACTIVE','Action is not active',403);
+    const currentPolicy=evaluatePolicy(this.store.list(this.store.policies,ctx.tenantId),{
+      agentId:agent.id,actionId:action.id,actionCode:action.code,
+      operationType:action.operationType,dataClassification:req.dataClassification||action.dataClassification,
+      environment:req.environment,riskLevel:req.risk?.level,riskScore:req.risk?.score,
+      destination:req.destination,monetaryValue:req.monetaryValue
+    });
+    assert(currentPolicy.decision!=='DENY' && currentPolicy.policy &&
+      currentPolicy.policy.id===req.policy?.id && currentPolicy.policy.version===req.policy?.version,
+      'POLICY_REVOKED','Authorization policy changed; reevaluation required',403);
+    if(req.decision==='ALLOW') assert(currentPolicy.decision==='ALLOW',
+      'POLICY_ESCALATED','Action now requires additional authorization',403);
+    if(req.decision!=='ALLOW'){
+      const approval=this.store.list(this.store.approvals,ctx.tenantId).find(a=>a.actionRequestId===req.id);
+      assert(approval&&approval.status==='APPROVED','APPROVAL_REQUIRED','Approved authorization required',428);
+      assert(approval.payloadHash===req.payloadHash,'APPROVAL_HASH_MISMATCH','Approval hash mismatch',409);
+      assert(new Date(approval.expiresAt)>new Date(),'APPROVAL_EXPIRED','Approval expired',409);
+    }
+    const executor=this.executors[action.integrationId]||this.executors.default; assert(executor,'EXECUTOR_NOT_CONFIGURED','No executor configured',503);
     this.audit({...ctx,requestId:req.requestId,traceId:req.traceId,agentId:req.agentId},'EXECUTION_STARTED','ACTION_REQUEST',req.id,{actionCode:req.actionCode});
     const started=Date.now(); const output=await executor({action,request:req,payload:req.payload}); const result={requestId:req.requestId,traceId:req.traceId,status:'SUCCEEDED',output,outputHash:sha256(output),latencyMs:Date.now()-started}; this.store.idempotency.set(idemKey,result); this.audit({...ctx,requestId:req.requestId,traceId:req.traceId,agentId:req.agentId},'EXECUTION_SUCCEEDED','ACTION_REQUEST',req.id,{outputHash:result.outputHash,latencyMs:result.latencyMs}); return result;
   }

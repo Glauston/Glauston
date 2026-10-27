@@ -29,6 +29,10 @@ Integrações MCP/API devem passar pelo Action Gateway. Autorização externa de
 - `AUTH_MODE=trusted-proxy`: identidade validada por gateway/IdP externo e protegida por assertion HMAC entre proxy e serviço.
 - O segredo da assertion deve possuir ao menos 32 caracteres e ficar em secret manager.
 - Assertion expira em 5 minutos.
+- O papel `x-actor-role` é obrigatório e integra a HMAC: `tenantId.actorId.actorRole.ts`; assinaturas antigas sem papel deixam de funcionar.
+- Perfis server-side por rota: `SECURITY_ADMIN` (políticas/kill switch/cadastro), `APPROVER` (decisões de aprovação), `AUDITOR` (evidência), `OPERATOR` (avaliação/execução), `VIEWER` (sem operações privilegiadas).
+- Toda mudança de papel deve ser atribuída no IdP/gateway confiável; nunca usar `AUTH_MODE=dev` nem confiar em `x-actor-role` do cliente em ambiente exposto.
+- Evidência e riscos residuais em `docs/RED-TEAM-ARENA-AUDIT-2026-10-27.md`.
 
 ## Gates antes de produção comercial
 1. Integrar IdP corporativo (OIDC/SAML via gateway ou serviço dedicado).

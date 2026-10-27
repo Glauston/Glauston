@@ -116,7 +116,12 @@ npm test
 AUTH_MODE=dev PORT=8080 npm start
 ```
 
-No modo de desenvolvimento, envie `x-tenant-id` e `x-actor-id`. O modo `dev` é bloqueado quando `NODE_ENV=production`.
+No modo de desenvolvimento, envie `x-tenant-id`, `x-actor-id` e `x-actor-role` (um dos perfis `VIEWER`, `OPERATOR`, `SECURITY_ADMIN`, `APPROVER`, `AUDITOR`). O modo `dev` utiliza cabeçalhos não autenticados, deve ficar isolado em loopback e é bloqueado quando `NODE_ENV=production`.
+
+### Laboratório adversarial (27/10/2026)
+`npm test` também executa `tests/red-team-arena.test.js`: um servidor HTTP temporário em `127.0.0.1` com tenants, usuários e recursos fictícios. Foram encontradas duas lacunas P0 de RBAC e implementado um reforço de perfis assinalados criptograficamente no `trusted-proxy`. Veja o [relatório de Red Team e auditoria preliminar](./docs/RED-TEAM-ARENA-AUDIT-2026-10-27.md) e a [execução CI de reteste #52](https://github.com/Glauston/Glauston/actions/runs/40551962366). Os testes não substituem revisão independente ou homologação de produção.
+
+**Contrato de autenticação do trusted proxy (mudança incompatível):** o proxy deve enviar `x-tenant-id`, `x-actor-id`, `x-actor-role`, `x-auth-ts` e `x-auth-signature`. A assinatura é HMAC-SHA256 em `tenantId.actorId.actorRole.ts`; devem existir TLS, verificação da identidade e atribuição do papel pelo IdP/gateway, sem confiar em um papel enviado pelo cliente. Este mecanismo é intermediário e depende de hardening corporativo para uso real.
 
 ## Produção
 Não confundir MVP homologável com produção comercial. Antes de produção devem existir evidências para persistência PostgreSQL transacional, IdP corporativo, secret manager/KMS, TLS, backup/restore, observabilidade, SAST/secret/dependency scanning, SBOM, teste de carga e pentest defensivo autorizado.

@@ -11,3 +11,48 @@ test('kill switch overrides allow',()=>{ const {c}=setup(); c.publishPolicy(ctx(
 test('tenant isolation prevents cross tenant lookup',()=>{ const {c}=setup(); assert.throws(()=>c.evaluateAction(ctx('t2'),{agentId:'a1',actionId:'act1',payload:{}}),/Resource not found/); });
 test('audit chain remains valid and secrets are redacted',()=>{ const {c}=setup(); c.audit(ctx(),'SECRET_TEST','TEST','1',{apiKey:'abc',nested:{password:'123'}}); assert.equal(c.store.verifyAuditChain(),true); const last=c.store.audit.at(-1); assert.equal(last.metadata.apiKey,'[REDACTED]'); assert.equal(last.metadata.nested.password,'[REDACTED]'); });
 test('deny rule overrides allow rule regardless of priority',()=>{ const {c}=setup(); c.publishPolicy(ctx(),{priority:999,rules:[{effect:'ALLOW',when:{actionCode:'invoice.send'}}]}); c.publishPolicy(ctx(),{priority:0,rules:[{effect:'DENY',when:{actionCode:'invoice.send'},reasonCodes:['EXPLICIT_DENY']}]}); const r=c.evaluateAction(ctx(),{agentId:'a1',actionId:'act1',payload:{}}); assert.equal(r.decision,'DENY'); assert.deepEqual(r.reasonCodes,['EXPLICIT_DENY']); });
+
+
+// FORTRESS 3.1 regression: a prior decision is not an indefinite permission to execute.
+test('FORTRESS 3.1: denied decision cannot be executed through the internal gateway',async()=>{
+  const {c}=setup();
+  const denied=c.evaluateAction(ctx(),{agentId:'a1',actionId:'act1',payload:{x:1}});
+  assert.equal(denied.decision,'DENY');
+  await assert.rejects(()=>c.executeAuthorized(ctx(),denied.requestId,'denied-action'),e=>e.code==='REQUEST_NOT_AUTHORIZED');
+});
+
+test('FORTRESS 3.1: explicit policy revocation blocks stale evaluated authorization',async()=>{
+  const {c}=setup();
+  c.publishPolicy(ctx(),{rules:[{effect:'ALLOW',when:{actionCode:'invoice.send'}}]});
+  const evaluated=c.evaluateAction(ctx(),{agentId:'a1',actionId:'act1',payload:{x:1}});
+  assert.equal(evaluated.decision,'ALLOW');
+  c.publishPolicy(ctx(),{rules:[{effect:'DENY',when:{actionCode:'invoice.send'},reasonCodes:['REVOKED']}]});
+  await assert.rejects(()=>c.executeAuthorized(ctx(),evaluated.requestId,'stale-allow'),e=>e.code==='POLICY_REVOKED');
+});
+
+test('FORTRESS 3.1: approved action is blocked after approval expires',async()=>{
+  const {c}=setup();
+  c.publishPolicy(ctx(),{rules:[{effect:'REQUIRE_APPROVAL',when:{actionCode:'invoice.send'}}]});
+  const evaluated=c.evaluateAction(ctx(),{agentId:'a1',actionId:'act1',payload:{amount:10}});
+  const original=c.store.get(c.store.approvals,'t1',evaluated.approvalRequestId);
+  for(let i=0;i<original.requiredApprovals;i++){
+    c.approve(ctx('t1',`reviewer${i}`),original.id,{justification:'independent review',stepUpVerified:true});
+  }
+  const approved=c.store.get(c.store.approvals,'t1',original.id);
+  assert.equal(approved.status,'APPROVED');
+  approved.expiresAt=new Date(Date.now()-60_000).toISOString();
+  c.store.put(c.store.approvals,'t1',approved);
+  await assert.rejects(()=>c.executeApproved(ctx(),{requestId:evaluated.requestId,payload:{amount:10}}),e=>e.code==='APPROVAL_EXPIRED');
+});
+
+test('FORTRESS 3.1: kill switch blocks execution after approval',async()=>{
+  const {c}=setup();
+  c.publishPolicy(ctx(),{rules:[{effect:'REQUIRE_APPROVAL',when:{actionCode:'invoice.send'}}]});
+  const evaluated=c.evaluateAction(ctx(),{agentId:'a1',actionId:'act1',payload:{amount:10}});
+  const approval=c.store.get(c.store.approvals,'t1',evaluated.approvalRequestId);
+  for(let i=0;i<approval.requiredApprovals;i++){
+    c.approve(ctx('t1',`reviewer${i}`),approval.id,{justification:'reviewed',stepUpVerified:true});
+  }
+  c.activateKillSwitch(ctx(),{scopeType:'AGENT',scopeId:'a1',reason:'containment exercise'});
+  await assert.rejects(()=>c.executeApproved(ctx(),{requestId:evaluated.requestId,payload:{amount:10}}),e=>e.code==='KILL_SWITCH_ACTIVE');
+});
