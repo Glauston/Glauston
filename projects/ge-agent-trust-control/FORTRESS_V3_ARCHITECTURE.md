@@ -117,3 +117,9 @@ Sem benchmark comparável ou pentest independente, não afirmar "o mais seguro d
 - GitHub artifact attestations: https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations
 - Confidential Computing Consortium: https://confidentialcomputing.io/
 - NIST PQC migration: https://pages.nist.gov/nccoe-migration-post-quantum-cryptography/
+
+
+## J. Evolução incremental FORTRESS 3.1 — 27/10/2026
+**Referência complementar:** [FORTRESS 3.1 — atualização de segurança verificável](./FORTRESS_V31_SECURITY_UPDATE.md).
+
+A versão 3.1 **preserva 21 camadas / 7 domínios / 16 cápsulas**, prioriza revalidação da autorização no último momento, aprovação não expirada, contenção independente, políticas OWASP ACS, red teaming OWASP 2026, identidade NIST e plano de migração PQC. Um incremento limitado do Secure Agent Control foi implementado **na branch de revisão**, com testes automatizados aprovados no [CI #45](https://github.com/Glauston/Glauston/actions/runs/40539894848). Demais controles dependem dos gates G0–G6. Manter PR em draft até avaliação de segurança, privacidade e AUDIT; não fazer deploy/merge automático.
