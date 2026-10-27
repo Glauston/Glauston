@@ -25,8 +25,8 @@ async function arena(t) {
 
 function signedHeaders({tenantId=tenant,actorId='synthetic-reader',role='VIEWER'}={}) {
   const ts = String(Math.floor(Date.now()/1000));
-  // Stage 1 intentionally uses the pre-hardening identity assertion to evaluate current behavior.
-  const sig = createHmac('sha256',SECRET).update(`${tenantId}.${actorId}.${ts}`).digest('hex');
+  // Stage 2: role is part of the authenticated claim to prevent client-side escalation.
+  const sig = createHmac('sha256',SECRET).update(`${tenantId}.${actorId}.${role}.${ts}`).digest('hex');
   return {'content-type':'application/json','x-tenant-id':tenantId,'x-actor-id':actorId,'x-actor-role':role,'x-auth-ts':ts,'x-auth-signature':sig};
 }
 
@@ -79,4 +79,45 @@ test('RT-05 P0: viewer cannot disable emergency kill switch',async t=>{
     body:{reason:'attempted unauthorized override'}
   });
   assert.equal(r.status,403,'AUTHZ_BYPASS: viewer disabled kill switch instead of being denied');
+});
+
+test('RT-06: read-only viewer cannot view audit records',async t=>{
+  const {baseUrl}=await arena(t);
+  const r=await probe(baseUrl,'/api/v1/audit/events',{headers:signedHeaders({role:'VIEWER'})});
+  assert.equal(r.status,403);
+});
+
+test('RT-07: changing role on a signed assertion is rejected',async t=>{
+  const {baseUrl}=await arena(t);
+  const identity=signedHeaders({role:'VIEWER'});
+  identity['x-actor-role']='SECURITY_ADMIN';
+  const r=await probe(baseUrl,'/api/v1/command-center',{headers:identity});
+  assert.equal(r.status,401);
+});
+
+test('RT-08: authorized security administrator can publish synthetic policy',async t=>{
+  const {baseUrl}=await arena(t);
+  const r=await probe(baseUrl,'/api/v1/policies',{
+    method:'POST',headers:signedHeaders({actorId:'synthetic-sec-admin',role:'SECURITY_ADMIN'}),
+    body:{name:'synthetic-allow',rules:[{effect:'ALLOW',when:{actionCode:'arena.read'}}]}
+  });
+  assert.equal(r.status,201);
+});
+
+test('RT-09: viewer cannot execute a tool',async t=>{
+  const {baseUrl}=await arena(t);
+  const r=await probe(baseUrl,'/api/v1/actions/execute',{
+    method:'POST',headers:signedHeaders({role:'VIEWER'}),
+    body:{agentId:'arena-agent',actionId:'arena-action',idempotencyKey:'test-viewer-execute'}
+  });
+  assert.equal(r.status,403);
+});
+
+test('RT-10: tenant B cannot deactivate tenant A emergency kill switch',async t=>{
+  const {baseUrl,emergency}=await arena(t);
+  const r=await probe(baseUrl,`/api/v1/kill-switches/${emergency.id}/deactivate`,{
+    method:'POST',headers:signedHeaders({tenantId:outsider,actorId:'synthetic-admin-b',role:'SECURITY_ADMIN'}),
+    body:{reason:'cross tenant attempt'}
+  });
+  assert.equal(r.status,404);
 });
