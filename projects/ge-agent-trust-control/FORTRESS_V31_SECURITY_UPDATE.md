@@ -65,7 +65,7 @@ Em `projects/ge-secure-agent-control`:
 - preserva kill switch e idempotência existentes;
 - novos testes negativos automatizados para autorização negada, revogação posterior, aprovação expirada e kill switch após aprovação.
 
-**Limites conhecidos:** MVP usa `MemoryStore`, não é gateway distribuído/transacional, nem aplica ainda identidade de workload forte, política de missão completa, egress via rede ou enforcement em todos os conectores. A validação de autorizações administrativas e integração corporativa com IdP/PAM são gates P0; este incremento não resolve essa integração. O resultado dos testes de CI precisa ser verificado antes de merge.
+**Limites conhecidos:** MVP usa `MemoryStore`, não é gateway distribuído/transacional, nem aplica ainda identidade de workload forte, política de missão completa, egress via rede ou enforcement em todos os conectores. A validação de autorizações administrativas e integração corporativa com IdP/PAM são gates P0; este incremento não resolve essa integração. O CI automatizado passou no GitHub Actions em 27/10/2026 (\`npm run check\` e \`npm test\`; [execução #45](https://github.com/Glauston/Glauston/actions/runs/40539894848)). Isso comprova apenas as verificações da suíte atual, não a homologação de segurança ou de produção.
 
 ## 5. Matriz de aceitação para Hacker, Guardian e AUDIT
 | ID | Cenário autorizado de teste | Resultado exigido | Prioridade |
@@ -88,7 +88,7 @@ Em `projects/ge-secure-agent-control`:
 | FT16 | Simulação de restore e compensação | Evidência de RTO/RPO, integridade e reversibilidade | P1 |
 | FT17 | Inventário de certificados, TLS e assinaturas | Plano PQC priorizado aprovado | P2 |
 
-Legenda: os testes FT01–FT04 são adicionados ao código do MVP nesta branch; **o resultado ainda depende da execução CI**. FT05–FT17 são **itens de backlog**, não testes comprovadamente executados.
+Legenda: os testes FT01–FT04 são adicionados ao código do MVP nesta branch; **a execução automatizada foi concluída com sucesso no GitHub Actions (run #45)**. FT05–FT17 são **itens de backlog**, não testes comprovadamente executados.
 
 ## 6. Release gates e sequência de implantação
 - **G0 — Inventário real:** versão, código, env, branches, CI, dependências, fluxos de privilégio e dados; evidenciar lacunas.
